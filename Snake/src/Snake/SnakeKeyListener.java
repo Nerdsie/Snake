@@ -28,9 +28,6 @@ public class SnakeKeyListener implements KeyListener {
 			}
 			
 			game.board[(int) Snake.snake.get(0).x][(int) Snake.snake.get(0).y] = 3;
-			game.tick();
-			game.render();
-			game.repaint();
 		}else if(e.getKeyChar() == 's' && Snake.snake.get(0).yD == 0){
 			Snake.snake.get(0).xD = 0;
 			Snake.snake.get(0).yD = 1;
@@ -43,9 +40,6 @@ public class SnakeKeyListener implements KeyListener {
 			}
 			
 			game.board[(int) Snake.snake.get(0).x][(int) Snake.snake.get(0).y] = 1;
-			game.tick();
-			game.render();
-			game.repaint();
 		}else if(e.getKeyChar() == 'a' && Snake.snake.get(0).xD == 0){
 			Snake.snake.get(0).xD = -1;
 			Snake.snake.get(0).yD = 0;
@@ -58,9 +52,6 @@ public class SnakeKeyListener implements KeyListener {
 			}
 			
 			game.board[(int) Snake.snake.get(0).x][(int) Snake.snake.get(0).y] = 2;
-			game.tick();
-			game.render();
-			game.repaint();
 		}else if(e.getKeyChar() == 'd' && Snake.snake.get(0).xD == 0){
 			Snake.snake.get(0).xD = 1;
 			Snake.snake.get(0).yD = 0;
@@ -73,9 +64,6 @@ public class SnakeKeyListener implements KeyListener {
 			}
 			
 			game.board[(int) Snake.snake.get(0).x][(int) Snake.snake.get(0).y] = 4;
-			game.tick();
-			game.render();
-			game.repaint();
 		}
 	}
 
@@ -88,6 +76,4 @@ public class SnakeKeyListener implements KeyListener {
 	public void keyTyped(KeyEvent e) {
 		
 	}
-	
-
 }

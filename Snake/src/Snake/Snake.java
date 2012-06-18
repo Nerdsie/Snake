@@ -36,7 +36,7 @@ public class Snake extends Applet implements Runnable {
 	
 	public boolean running = false;
 	
-	public int toAdd = 0;
+	public ArrayList<Color> toAdd = new ArrayList<Color>();
 	
 	public void init(){
 		
@@ -180,6 +180,7 @@ public class Snake extends Applet implements Runnable {
 	public void setup(){
 		setSize(wa * scale, ha * scale);
 		
+		toAdd.clear();
 		requestFocus();
 		over = false;
 		backColor = Color.BLACK;
@@ -252,12 +253,12 @@ public class Snake extends Applet implements Runnable {
 	}
 	
 	public void addEndPart(){
-		if(toAdd <= 0)
+		if(toAdd.size() <= 0)
 			return;
-			
-		toAdd--;
+
 		SnakePart last = snake.get(snake.size() - 1);
-		snake.add(new SnakePart(this, last.x - last.xD, last.y - last.yD).setDir(last.xD, last.yD));//add new snake part thing;
+		snake.add(new SnakePart(this, last.x - last.xD, last.y - last.yD, toAdd.get(0)).setDir(last.xD, last.yD));//add new snake part thing;
+		toAdd.remove(0);
 	}
 	
 	public void update(){
@@ -275,6 +276,7 @@ public class Snake extends Applet implements Runnable {
 	public void checkEatApple(){
 		if(snake.get(0).isOnApple()){
 			int add = new Random().nextInt(3) + 1;
+			Color c = apple.color;
 			
 			if(apple.color == Color.YELLOW){
 				add = 12;
@@ -288,9 +290,11 @@ public class Snake extends Applet implements Runnable {
 				speedCount = defCount * 2;
 			}
 			
-			apple.regenApple();
+			for(int i = 0; i < add; i++){
+				toAdd.add(c);
+			}
 			
-			toAdd = add;
+			apple.regenApple();
 		}
 	}
 	
