@@ -14,6 +14,8 @@ public class Snake extends Applet implements Runnable {
 	public static final int scale = 10;
 	int count = 0;
 	
+	public boolean focus = true;
+	
 	public Color backColor = Color.BLACK;
 	
 	public static ArrayList<SnakePart> snake = new ArrayList<SnakePart>();
@@ -27,6 +29,7 @@ public class Snake extends Applet implements Runnable {
 	
 	public int width = 640;
 	public int height = 480;
+	public int yFocOff = 0, yFocDir = 1;
 	
 	public Image backBuffer;
 	public static Graphics canvas;
@@ -48,6 +51,7 @@ public class Snake extends Applet implements Runnable {
 		canvas = backBuffer.getGraphics();
 		
 		this.addKeyListener(new SnakeKeyListener(this));
+		this.addFocusListener(new SnakeFocusListener(this));
 		
 		new Thread(this).start();
 
@@ -55,6 +59,19 @@ public class Snake extends Applet implements Runnable {
 	}
 	
 	public void tick(){
+		if(!focus){
+			yFocOff+=yFocDir;
+			
+			if(yFocOff > 20){
+				yFocDir = -yFocDir;
+			}
+			if(yFocOff < 0){
+				yFocDir = -yFocDir;
+			}
+			
+			return;
+		}
+		
 		advance();
 	}
 	
@@ -67,6 +84,10 @@ public class Snake extends Applet implements Runnable {
 		canvas.drawString(m, getWidth() / 2 - getSW(m) / 2, y);
 	}
 	
+	public void drawCString(String m, int x, int y){
+		canvas.drawString(m, getWidth() / 2 - getSW(m) / 2 + x, y);
+	}
+	
 	public void drawCString(String m){
 		
 	}
@@ -74,17 +95,6 @@ public class Snake extends Applet implements Runnable {
 	public void render(){
 		canvas.setColor(backColor);
 		canvas.fillRect(0, 0, width, height);
-		
-		if(over){
-			canvas.setColor(Color.RED);
-			canvas.setFont(new Font("Arial", 0, 30));
-			String toDisp = "GAME OVER! SCORE: " + snake.size();
-			drawCString(toDisp, getHeight() / 2 - 14);
-			toDisp = "Press 'r' to Restart.";
-			drawCString(toDisp, getHeight() / 2 + 14);
-			
-			return;
-		}
 		
 		for(SnakePart s: snake){
 			s.render(canvas);
@@ -101,9 +111,56 @@ public class Snake extends Applet implements Runnable {
 		
 		apple.render(canvas);
 		
-		canvas.setColor(Color.WHITE);
 		canvas.setFont(new Font("Arial", 0, 30));
-		canvas.drawString("Score: " + snake.size(), 2, 26);
+		draw3DString("Score: " + snake.size(), 2, 26);
+		
+		if(over){
+			canvas.setColor(new Color(0, 0, 0, 210));
+			canvas.fillRect(0, 0, width, height);
+			
+			canvas.setColor(Color.RED);
+			canvas.setFont(new Font("Arial", 0, 30));
+			drawC3DString("GAME OVER! SCORE: " + snake.size(), Color.RED, height / 2 - 14);
+			drawC3DString("Press 'r' to Restart.", Color.RED, height / 2 + 14);
+		}
+
+		if(!focus){
+			canvas.setColor(new Color(0, 0, 0, 210));
+			canvas.fillRect(0, 0, width, height);
+			
+			canvas.setFont(new Font("Arial", 1, 30));
+			drawC3DString("Click Here to Play!", height / 2 + yFocOff);
+			
+			repaint();
+		}
+	}
+
+	public void drawC3DString(String m, int y){
+		canvas.setColor(Color.GRAY);
+		drawCString(m, 2, y + 2);
+		canvas.setColor(Color.WHITE);
+		drawCString(m, y);
+	}
+
+	public void drawC3DString(String m, Color f, int y){
+		canvas.setColor(f.darker().darker().darker());
+		drawCString(m, 2, y + 2);
+		canvas.setColor(f);
+		drawCString(m, y);
+	}
+
+	public void draw3DString(String m, int x, int y){
+		canvas.setColor(Color.GRAY);
+		canvas.drawString(m, x + 2, y + 2);
+		canvas.setColor(Color.WHITE);
+		canvas.drawString(m, x, y);
+	}
+
+	public void draw3DString(String m, Color f, int x, int y){
+		canvas.setColor(f.darker().darker().darker());
+		canvas.drawString(m, x + 2, y + 2);
+		canvas.setColor(f);
+		canvas.drawString(m, x, y);
 	}
 	
 	public void run(){
@@ -123,6 +180,7 @@ public class Snake extends Applet implements Runnable {
 	public void setup(){
 		setSize(wa * scale, ha * scale);
 		
+		requestFocus();
 		over = false;
 		backColor = Color.BLACK;
 		count = 0;
