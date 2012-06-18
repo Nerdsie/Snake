@@ -23,7 +23,7 @@ public class Snake extends Applet implements Runnable {
 	public Apple apple;
 	public boolean over = false;
 	public int countdown = 0, speedCount = 0;
-	public int speed, defSpeed = 8;
+	public int speed, defSpeed = 6, defSlowSpeed = 10, defFastSpeed = 3;
 
 	public int defCount = 300;
 	
@@ -280,11 +280,11 @@ public class Snake extends Applet implements Runnable {
 				add = 12;
 			}
 			if(apple.color == Color.GREEN){
-				speed = 5;
+				speed = defFastSpeed;
 				speedCount = defCount * 2;
 			}
 			if(apple.color == Color.GRAY){
-				speed = 10;
+				speed = defSlowSpeed;
 				speedCount = defCount * 2;
 			}
 			
@@ -295,7 +295,7 @@ public class Snake extends Applet implements Runnable {
 	}
 	
 	public void updateFlash(){
-		if(snake.size() % 50 == 0){
+		if(snake.size() % 30 == 0){
 			countdown = defCount;
 		}
 		
